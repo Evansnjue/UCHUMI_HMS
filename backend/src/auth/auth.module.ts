@@ -9,6 +9,7 @@ import { Permission } from './entities/permission.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { RbacService } from './rbac.service';
 import { EventBusService } from './event-bus.service';
+import { UserEventsSubscriber } from './subscribers/user-events.subscriber';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { EventBusService } from './event-bus.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, RbacService, EventBusService],
+  providers: [AuthService, JwtStrategy, RbacService, EventBusService, UserEventsSubscriber],
   exports: [AuthService, RbacService, EventBusService],
 })
 export class AuthModule {}

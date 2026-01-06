@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: uchumi_test
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install backend deps
+        working-directory: backend
+        run: npm ci
+      - name: Wait for services
+        run: |
+          echo 'Waiting for Postgres and Redis...'
+          for i in `seq 1 20`; do
+            pg_isready -h localhost -p 5432 -U postgres && redis-cli -h localhost -p 6379 ping && break
+            sleep 3
+          done
+      - name: Run migrations
+        working-directory: backend
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASS: postgres
+          DB_NAME: uchumi_test
+        run: |
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/auth/migrations/001-create-auth-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/patient/migrations/001-create-patient-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/clinical/migrations/001-create-clinical-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/pharmacy/migrations/001-create-pharmacy-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/inventory/migrations/001-create-inventory-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/visit/migrations/001-create-visit-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/lab/migrations/001-create-lab-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/hr/migrations/001-create-hr-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/billing/migrations/001-create-billing-schema.sql
+      - name: Run tests
+        working-directory: backend
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASS: postgres
+          DB_NAME: uchumi_test
+          REDIS_URL: redis://localhost:6379
+        run: npm test --silent --runInBand

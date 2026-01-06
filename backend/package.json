@@ -6,7 +6,8 @@
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
     "build": "tsc -p tsconfig.build.json",
-    "test": "jest"
+    "test": "jest",
+    "test:integration": "cross-env DB_HOST=localhost DB_PORT=5433 DB_USER=postgres DB_PASS=postgres DB_NAME=uchumi_test REDIS_URL=redis://localhost:63790 jest --runInBand --testPathPattern='\\.int-spec\\.ts$'"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
