@@ -1,5 +1,11 @@
 -- Visits and queues
 
+CREATE TABLE IF NOT EXISTS visit_status (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text UNIQUE NOT NULL,
+  description text
+);
+
 INSERT INTO visit_status (name, description) VALUES
   ('QUEUED', 'Visit is queued'),
   ('ACTIVE', 'Visit is in progress'),

@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS stock (
   location text NOT NULL DEFAULT 'central',
   quantity numeric NOT NULL DEFAULT 0,
   updated_at timestamptz NOT NULL DEFAULT now(),
-  CONSTRAINT fk_stock_drug FOREIGN KEY (drug_id) REFERENCES clinical_drugs(id) ON DELETE CASCADE
+  CONSTRAINT fk_stock_drug FOREIGN KEY (drug_id) REFERENCES drugs(id) ON DELETE CASCADE
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_stock_drug_location ON stock(drug_id, location);
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS dispensed_drugs (
   dispensed_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT fk_dispense_prescription_item FOREIGN KEY (prescription_item_id) REFERENCES prescription_items(id) ON DELETE CASCADE,
   CONSTRAINT fk_dispense_prescription FOREIGN KEY (prescription_id) REFERENCES prescriptions(id) ON DELETE CASCADE,
-  CONSTRAINT fk_dispense_drug FOREIGN KEY (drug_id) REFERENCES clinical_drugs(id) ON DELETE CASCADE,
+  CONSTRAINT fk_dispense_drug FOREIGN KEY (drug_id) REFERENCES drugs(id) ON DELETE CASCADE,
   CONSTRAINT fk_dispense_pharmacist FOREIGN KEY (pharmacist_id) REFERENCES users(id) ON DELETE SET NULL
 );
 

@@ -40,9 +40,9 @@ CREATE TABLE IF NOT EXISTS stock_movements (
 CREATE INDEX IF NOT EXISTS idx_movements_item ON stock_movements(item_id);
 CREATE INDEX IF NOT EXISTS idx_movements_created_by ON stock_movements(created_by);
 
--- Seed a few departments
-INSERT INTO departments (id, name, description) VALUES (gen_random_uuid(), 'Central Store', 'Central inventory store') ON CONFLICT DO NOTHING;
-INSERT INTO departments (id, name, description) VALUES (gen_random_uuid(), 'Pharmacy', 'Pharmacy department') ON CONFLICT DO NOTHING;
-INSERT INTO departments (id, name, description) VALUES (gen_random_uuid(), 'Surgery', 'Surgery department') ON CONFLICT DO NOTHING;
+-- Seed a few departments (include code to be compatible with patient departments)
+INSERT INTO departments (code, name, description) VALUES ('CENT', 'Central Store', 'Central inventory store') ON CONFLICT (code) DO NOTHING;
+INSERT INTO departments (code, name, description) VALUES ('PHARM', 'Pharmacy', 'Pharmacy department') ON CONFLICT (code) DO NOTHING;
+INSERT INTO departments (code, name, description) VALUES ('SUR', 'Surgery', 'Surgery department') ON CONFLICT (code) DO NOTHING;
 
 -- Audit table reuse: pharmacy_audit exists, reuse for inventory events as well
