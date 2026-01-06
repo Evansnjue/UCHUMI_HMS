@@ -33,6 +33,9 @@ jobs:
       - name: Install backend deps
         working-directory: backend
         run: npm ci
+      - name: Install redis-cli
+        run: |
+          sudo apt-get update && sudo apt-get install -y redis-tools
       - name: Wait for services
         run: |
           echo 'Waiting for Postgres and Redis...'
@@ -49,17 +52,20 @@ jobs:
           DB_PASS: postgres
           DB_NAME: uchumi_test
         run: |
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/auth/migrations/001-create-auth-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/patient/migrations/001-create-patient-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/clinical/migrations/001-create-clinical-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/pharmacy/migrations/001-create-pharmacy-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/inventory/migrations/001-create-inventory-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/visit/migrations/001-create-visit-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/lab/migrations/001-create-lab-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/hr/migrations/001-create-hr-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/reporting/migrations/001-create-reporting-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/procurement/migrations/001-create-procurement-schema.sql
-          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/billing/migrations/001-create-billing-schema.sql
+          export PGPASSWORD=$DB_PASS
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/auth/migrations/001-create-auth-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/patient/migrations/001-create-patient-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/clinical/migrations/001-create-clinical-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/pharmacy/migrations/001-create-pharmacy-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/inventory/migrations/001-create-inventory-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/visit/migrations/001-create-visit-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/lab/migrations/001-create-lab-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/hr/migrations/001-create-hr-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/reporting/migrations/001-create-reporting-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/procurement/migrations/001-create-procurement-schema.sql
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -f src/billing/migrations/001-create-billing-schema.sql
+          echo 'Verifying procurement migration: checking suppliers table exists'
+          psql -h localhost -p 5432 -U $DB_USER -d $DB_NAME -c "SELECT to_regclass('public.procurement_suppliers')"
       - name: Run tests
         working-directory: backend
         env:
