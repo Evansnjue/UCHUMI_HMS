@@ -34,6 +34,7 @@ import { HRModule } from './hr/hr.module';
     (await import('./billing/billing.module')).BillingModule,
     (await import('./inventory/inventory.module')).InventoryModule,
     (await import('./hr/hr.module')).HRModule,
+    (await import('./reporting/reporting.module')).ReportingModule,
   ],
 })
 export class AppModule {}
