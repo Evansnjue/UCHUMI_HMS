@@ -58,6 +58,7 @@ jobs:
           psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/lab/migrations/001-create-lab-schema.sql
           psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/hr/migrations/001-create-hr-schema.sql
           psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/reporting/migrations/001-create-reporting-schema.sql
+          psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/procurement/migrations/001-create-procurement-schema.sql
           psql -h localhost -p 5432 -U postgres -d uchumi_test -f src/billing/migrations/001-create-billing-schema.sql
       - name: Run tests
         working-directory: backend
