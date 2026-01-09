@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, JoinColumn } from 'typeorm';
-import { Patient } from '../patient/entities/patient.entity';
-import { Department } from '../patient/entities/department.entity';
+import { Patient } from '../../patient/entities/patient.entity';
+import { Department } from '../../patient/entities/department.entity';
 import { VisitStatus } from './visit-status.entity';
 
 @Entity({ name: 'visits' })

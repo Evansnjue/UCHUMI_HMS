@@ -25,8 +25,8 @@ export class LabService {
     const test = await this.catalogRepo.findOne({ where: { id: dto.testId } });
     if (!test) throw new NotFoundException('Test not found');
 
-    const result = this.resultRepo.create({ labRequest: req, test, value: dto.value, units: dto.units, status: 'COMPLETED', enteredBy: { id: user.sub } as any } as any);
-    const saved = await this.resultRepo.save(result);
+    const result: LabResult = this.resultRepo.create({ labRequest: req, test, value: dto.value, units: dto.units, status: 'COMPLETED', enteredBy: { id: user.sub } as any } as any) as unknown as LabResult;
+    const saved: LabResult = await this.resultRepo.save(result) as unknown as LabResult;
     await this.eventBus.publish('LabResultUpdated', { labResultId: saved.id, at: new Date().toISOString() });
     await this.eventBus.publish('LabCompleted', { labRequestId: req.id, at: new Date().toISOString() });
     return saved;

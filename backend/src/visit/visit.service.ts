@@ -41,8 +41,8 @@ export class VisitService {
     // Generate visitNumber if not provided
     const visitNumber = dto.visitNumber || (await this.visitNumberService.generate(dept.code, type));
 
-    const visit = this.visitRepo.create({ visitNumber, patient, department: dept, status: queuedStatus, notes: dto.notes } as any);
-    const saved = await this.visitRepo.save(visit);
+    const visit: Visit = this.visitRepo.create({ visitNumber, patient, department: dept, status: queuedStatus, notes: dto.notes } as any) as unknown as Visit;
+    const saved: Visit = await this.visitRepo.save(visit) as unknown as Visit;
 
     // Add to queue
     await this.queueRepo.save(this.queueRepo.create({ department: dept, visit: saved } as any));

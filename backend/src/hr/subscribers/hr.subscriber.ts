@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { EventBusService } from '../auth/event-bus.service';
+import { EventBusService } from '../../auth/event-bus.service';
 
 @Injectable()
 export class HRSubscriber {

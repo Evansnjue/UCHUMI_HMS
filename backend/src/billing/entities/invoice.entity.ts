@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { BillingItem } from './billing-item.entity';
-import { Patient } from '../patient/entities/patient.entity';
+import { Patient } from '../../patient/entities/patient.entity';
 
 @Entity({ name: 'invoices' })
 export class Invoice {

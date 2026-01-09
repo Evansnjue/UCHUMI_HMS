@@ -18,4 +18,7 @@ export class PrescriptionItem {
 
   @Column({ type: 'text', nullable: true })
   instructions?: string;
+
+  @Column({ type: 'text', nullable: true })
+  unit?: string | null;
 }

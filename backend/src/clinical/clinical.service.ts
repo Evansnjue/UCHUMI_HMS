@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository, Between, In } from 'typeorm';
 import { Consultation } from './entities/consultation.entity';
 import { CreateConsultationDto } from './dto/create-consultation.dto';
 import { Prescription } from './entities/prescription.entity';
@@ -44,7 +44,7 @@ export class ClinicalService {
 
     // Map drugId -> Drug and category
     const drugIds = dto.items.map((i) => i.drugId);
-    const drugs = await this.drugRepo.findByIds(drugIds, { relations: ['category'] });
+    const drugs = await this.drugRepo.find({ where: { id: In(drugIds) }, relations: ['category'] });
     if (drugs.length !== dto.items.length) throw new BadRequestException('Some drugs not found');
 
     // Compute quantities per category in this prescription
@@ -88,9 +88,9 @@ export class ClinicalService {
     }
 
     // Create prescription
-    const prescription = this.prescriptionRepo.create({ consultation: consult, prescribedBy: doctor } as any);
-    prescription.items = dto.items.map((it) => this.itemsRepo.create({ drug: { id: it.drugId } as any, quantity: it.quantity, instructions: it.instructions } as any));
-    const saved = await this.prescriptionRepo.save(prescription);
+    const prescription: Prescription = this.prescriptionRepo.create({ consultation: consult, prescribedBy: doctor } as any) as unknown as Prescription;
+    prescription.items = dto.items.map((it) => this.itemsRepo.create({ drug: { id: it.drugId } as any, quantity: it.quantity, instructions: it.instructions } as any)) as unknown as PrescriptionItem[];
+    const saved: Prescription = await this.prescriptionRepo.save(prescription) as unknown as Prescription;
 
     await this.eventBus.publish('PrescriptionIssued', { prescriptionId: saved.id, at: new Date().toISOString() });
     return saved;
@@ -99,8 +99,8 @@ export class ClinicalService {
   async createLabRequest(dto: CreateLabRequestDto, doctor: User) {
     const consult = await this.consultRepo.findOne({ where: { id: dto.consultationId } });
     if (!consult) throw new NotFoundException('Consultation not found');
-    const req = this.labRepo.create({ consultation: consult, requestedBy: doctor, testName: dto.testName, notes: dto.notes } as any);
-    const saved = await this.labRepo.save(req);
+    const req: LabRequest = this.labRepo.create({ consultation: consult, requestedBy: doctor, testName: dto.testName, notes: dto.notes } as any) as unknown as LabRequest;
+    const saved: LabRequest = await this.labRepo.save(req) as unknown as LabRequest;
     await this.eventBus.publish('LabRequested', { labRequestId: saved.id, at: new Date().toISOString() });
     return saved;
   }

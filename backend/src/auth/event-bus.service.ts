@@ -17,6 +17,19 @@ export class EventBusService {
     if (url) this.redis = new Redis(url);
   }
 
+  private listeners: Map<string, Array<(payload: any) => void>> = new Map();
+
+  subscribe(eventName: string, handler: (payload: any) => void) {
+    const arr = this.listeners.get(eventName) ?? [];
+    arr.push(handler);
+    this.listeners.set(eventName, arr);
+    // return unsubscribe
+    return () => {
+      const curr = this.listeners.get(eventName) ?? [];
+      this.listeners.set(eventName, curr.filter((h) => h !== handler));
+    };
+  }
+
   async publish(eventName: string, payload: any) {
     this.logger.debug(`Publishing event ${eventName}`);
     if (this.redis) {
@@ -24,6 +37,16 @@ export class EventBusService {
     } else {
       // Fallback to console for dev/test
       this.logger.log(`Event ${eventName} payload: ${JSON.stringify(payload)}`);
+    }
+
+    // call local listeners synchronously
+    const handlers = this.listeners.get(eventName) ?? [];
+    for (const h of handlers) {
+      try {
+        h(payload);
+      } catch (err) {
+        this.logger.error('Event handler error', err as any);
+      }
     }
   }
 }

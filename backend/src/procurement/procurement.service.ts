@@ -36,8 +36,8 @@ export class ProcurementService {
     const items = dto.items.map((it: any) => ({ description: it.description, quantity: it.quantity, unitPrice: it.unitPrice, totalPrice: Number(it.quantity) * Number(it.unitPrice) }));
     const total = items.reduce((sum: number, it: any) => sum + Number(it.totalPrice), 0);
 
-    const po = this.poRepo.create({ supplier, createdBy: actorId, totalAmount: total, currency: dto.currency || 'USD', status: 'PENDING', items } as any);
-    const saved = await this.poRepo.save(po);
+    const po: PurchaseOrder = this.poRepo.create({ supplier, createdBy: actorId, totalAmount: total, currency: dto.currency || 'USD', status: 'PENDING', items } as any) as unknown as PurchaseOrder;
+    const saved: PurchaseOrder = await this.poRepo.save(po) as unknown as PurchaseOrder;
 
     // publish event
     const ev: PurchaseOrderCreatedEvent = { purchaseOrderId: saved.id, supplierId: supplier.id, totalAmount: Number(saved.totalAmount) };

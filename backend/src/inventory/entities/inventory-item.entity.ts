@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, UpdateDateColumn } from 'typeorm';
 import { Department } from './department.entity';
-import { Drug } from '../clinical/entities/drug.entity';
+import { Drug } from '../../clinical/entities/drug.entity';
 
 /**
  * Inventory items represent tracked products in the central store.

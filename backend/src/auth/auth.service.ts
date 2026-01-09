@@ -1,5 +1,5 @@
 import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -81,7 +81,7 @@ export class AuthService {
   async changeUserRoles(userId: string, roleNames: string[]) {
     const user = await this.usersRepo.findOne({ where: { id: userId }, relations: ['roles'] });
     if (!user) throw new NotFoundException('User not found');
-    const roles = await this.rolesRepo.findBy({ name: roleNames });
+    const roles = await this.rolesRepo.find({ where: { name: In(roleNames) } });
     user.roles = roles;
     const saved = await this.usersRepo.save(user);
     await this.eventBus.publish('UserRoleChanged', { userId: saved.id, roles: roleNames });

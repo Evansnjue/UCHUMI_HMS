@@ -1,0 +1,1 @@
+{"version":3,"file":"add-stock.dto.js","sourceRoot":"","sources":["../../../src/inventory/dto/add-stock.dto.ts"],"names":[],"mappings":";;;;;;;;;AAAA,OAAO,EAAE,MAAM,EAAE,QAAQ,EAAE,UAAU,EAAE,QAAQ,EAAE,GAAG,EAAE,MAAM,iBAAiB,CAAC;AAE9E,MAAM,OAAO,WAAW;CAWvB;AATC;IADC,MAAM,EAAE;;2CACM;AAIf;IAFC,QAAQ,EAAE;IACV,GAAG,CAAC,CAAC,CAAC;;6CACU;AAIjB;IAFC,QAAQ,EAAE;IACV,UAAU,EAAE;;2CACG"}

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
+    "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/passport": "^9.0.0",
@@ -23,19 +24,23 @@
     "passport-jwt": "^4.0.0",
     "pg": "^8.0.0",
     "reflect-metadata": "^0.1.13",
+    "tsconfig-paths": "^4.2.0",
     "typeorm": "^0.3.20",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@nestjs/testing": "^9.4.3",
+    "@nestjs/typeorm": "^9.0.1",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^18.0.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.3",
     "jest": "^29.0.0",
     "nodemon": "^2.0.0",
     "ts-jest": "^29.0.0",
     "ts-node": "^10.0.0",
-    "typescript": "^5.0.0",
-    "@nestjs/testing": "^9.4.3",
-    "@nestjs/typeorm": "^9.0.1"
+    "typescript": "^5.0.0"
   }
 }

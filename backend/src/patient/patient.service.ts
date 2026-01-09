@@ -21,7 +21,7 @@ export class PatientService {
 
   async create(dto: CreatePatientDto) {
     // Basic creation with optional numbers and department assignments
-    const patient = this.patientRepo.create(dto as any);
+    const patient: Patient = this.patientRepo.create(dto as any) as unknown as Patient;
 
     // handle numbers if provided
     if (dto.numbers && dto.numbers.length > 0) {
@@ -30,7 +30,11 @@ export class PatientService {
         const exists = await this.numbersRepo.findOne({ where: { number: n.number } });
         if (exists) throw new BadRequestException(`Number ${n.number} already in use`);
       }
-      patient.numbers = dto.numbers.map((n) => this.numbersRepo.create({ type: n.type, number: n.number } as any));
+      patient.numbers = [];
+      for (const n of dto.numbers) {
+        const num = this.numbersRepo.create({ type: n.type, number: n.number } as any) as unknown as PatientNumber;
+        patient.numbers.push(num);
+      }
     }
 
     // Departments
@@ -39,7 +43,8 @@ export class PatientService {
       for (const d of dto.departments) {
         const dept = await this.deptRepo.findOne({ where: { code: d.departmentCode } });
         if (!dept) throw new BadRequestException(`Department ${d.departmentCode} not found`);
-        patient.departments.push(this.patientDeptRepo.create({ department: dept } as any));
+        const pd = this.patientDeptRepo.create({ department: dept } as any) as unknown as PatientDepartment;
+        patient.departments.push(pd);
       }
     }
 
@@ -50,7 +55,7 @@ export class PatientService {
   }
 
   async update(id: string, dto: UpdatePatientDto) {
-    const patient = await this.patientRepo.findOne({ where: { id }, relations: ['numbers', 'departments', 'departments.department'] });
+    const patient: Patient | null = await this.patientRepo.findOne({ where: { id }, relations: ['numbers', 'departments', 'departments.department'] });
     if (!patient) throw new NotFoundException('Patient not found');
 
     Object.assign(patient, dto);
@@ -62,7 +67,11 @@ export class PatientService {
         const exists = await this.numbersRepo.findOne({ where: { number: n.number } });
         if (exists && exists.patient.id !== patient.id) throw new BadRequestException(`Number ${n.number} already in use`);
       }
-      patient.numbers = dto.numbers.map((n) => this.numbersRepo.create({ type: n.type, number: n.number } as any));
+      patient.numbers = [];
+      for (const n of dto.numbers) {
+        const num = this.numbersRepo.create({ type: n.type, number: n.number } as any) as unknown as PatientNumber;
+        patient.numbers.push(num);
+      }
     }
 
     // handle department updates
@@ -71,7 +80,8 @@ export class PatientService {
       for (const d of dto.departments) {
         const dept = await this.deptRepo.findOne({ where: { code: d.departmentCode } });
         if (!dept) throw new BadRequestException(`Department ${d.departmentCode} not found`);
-        patient.departments.push(this.patientDeptRepo.create({ department: dept } as any));
+        const pd = this.patientDeptRepo.create({ department: dept } as any) as unknown as PatientDepartment;
+        patient.departments.push(pd);
       }
     }
 

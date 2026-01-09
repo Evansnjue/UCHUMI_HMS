@@ -1,0 +1,1 @@
+{"version":3,"file":"create-lab-result.dto.js","sourceRoot":"","sources":["../../../src/lab/dto/create-lab-result.dto.ts"],"names":[],"mappings":";;;;;;;;;AAAA,OAAO,EAAE,MAAM,EAAE,QAAQ,EAAE,UAAU,EAAE,MAAM,iBAAiB,CAAC;AAE/D,MAAM,OAAO,kBAAkB;CAa9B;AAXC;IADC,MAAM,EAAE;;wDACY;AAGrB;IADC,MAAM,EAAE;;kDACM;AAGf;IADC,QAAQ,EAAE;;iDACG;AAId;IAFC,UAAU,EAAE;IACZ,QAAQ,EAAE;;iDACI"}

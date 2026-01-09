@@ -17,6 +17,9 @@ export class Prescription {
   @OneToMany(() => PrescriptionItem, (i) => i.prescription, { cascade: true, eager: true })
   items: PrescriptionItem[];
 
+  @Column({ type: 'text', default: 'PENDING' })
+  status: 'PENDING' | 'COMPLETED' | 'CANCELLED';
+
   @CreateDateColumn({ type: 'timestamptz' })
   createdAt: Date;
 }

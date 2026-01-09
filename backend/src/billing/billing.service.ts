@@ -24,14 +24,14 @@ export class BillingService {
   async generateInvoice(dto: CreateInvoiceDto, createdBy: string) {
     if (!dto.items || dto.items.length === 0) throw new BadRequestException('Invoice items required');
 
-    const invoice = this.invoiceRepo.create({ patient: dto.patientId ? ({ id: dto.patientId } as any) : null, insuranceProvider: dto.insuranceProvider || null } as any);
-    invoice.items = dto.items.map((it) => this.itemRepo.create({ description: it.description, quantity: it.quantity, unitPrice: it.unitPrice, total: Number(it.quantity) * Number(it.unitPrice) } as any));
+    const invoice = this.invoiceRepo.create({ patient: dto.patientId ? ({ id: dto.patientId } as any) : null, insuranceProvider: dto.insuranceProvider || null } as any) as any as Invoice;
+    invoice.items = dto.items.map((it) => this.itemRepo.create({ description: it.description, quantity: it.quantity, unitPrice: it.unitPrice, total: Number(it.quantity) * Number(it.unitPrice) } as any)) as any as import('./entities/billing-item.entity').BillingItem[];
 
-    invoice.totalAmount = invoice.items.reduce((s, it) => s + Number(it.total), 0);
+    invoice.totalAmount = invoice.items.reduce((s: number, it: any) => s + Number(it.total), 0);
     invoice.insuranceCoveredAmount = dto.insuranceCoveredAmount || 0;
     invoice.patientResponsible = Number(invoice.totalAmount) - Number(invoice.insuranceCoveredAmount || 0);
 
-    const saved = await this.invoiceRepo.save(invoice);
+    const saved = (await this.invoiceRepo.save(invoice)) as any as Invoice;
 
     // Emit InvoiceGenerated
     const evt: InvoiceGeneratedEvent = {
@@ -63,7 +63,7 @@ export class BillingService {
     if (!invoice) throw new NotFoundException('Invoice not found');
 
     const payment = this.paymentRepo.create({ invoice: invoice as any, amount: dto.amount, method: dto.method, provider: dto.provider, reference: dto.reference, receivedBy: { id: receivedBy } } as any);
-    const saved = await this.paymentRepo.save(payment);
+    const saved = (await this.paymentRepo.save(payment)) as any as Payment;
 
     // Update invoice status & prevent overpayment
     const totalPaidRaw = (await this.paymentRepo.createQueryBuilder('p').select('SUM(p.amount)', 'sum').where('p.invoice_id = :id', { id: invoice.id }).getRawOne()).sum || 0;

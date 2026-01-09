@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 import { InventoryItem } from './inventory-item.entity';
 import { Department } from './department.entity';
-import { User } from '../auth/entities/user.entity';
+import { User } from '../../auth/entities/user.entity';
 
 @Entity({ name: 'stock_movements' })
 export class StockMovement {
