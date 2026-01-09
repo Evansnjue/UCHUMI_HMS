@@ -94,15 +94,7 @@ export {
 // Routes
 export { patientRoutes } from './routes';
 
-// Mock Data
-export {
-  mockPatients,
-  mockDepartments,
-  mockDoctors,
-  mockPatientVisits,
-  mockMedicalHistory,
-  mockPrescriptions,
-} from './mock/mockPatients';
+
 
 // Utilities
 export {

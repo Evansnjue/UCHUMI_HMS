@@ -102,14 +102,4 @@ export { AUTH_CONSTANTS, type RoleCode, type PermissionCode } from './constants'
 // Routes
 export { authRoutes } from './routes';
 
-// Mock data
-export {
-  mockAdmin,
-  mockPharmacist,
-  mockDoctor,
-  mockUsers,
-  mockRoles,
-  mockPermissions,
-  generateMockLoginResponse,
-  mockCredentials,
-} from './mock';
+

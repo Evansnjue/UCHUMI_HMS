@@ -153,16 +153,4 @@ export {
   findBestBatchForDispensingFIFO,
 } from './utils/formatters';
 
-// Mock Data (for development)
-export {
-  mockDrugs,
-  mockStockBatches,
-  mockDrugStocks,
-  mockPrescriptions,
-  mockDispensingRecords,
-  mockAuditLogs,
-  mockDoctorLimits,
-  getMockData,
-  generateMockPaginatedResponse,
-  simulateApiLatency,
-} from './mocks/data';
+
